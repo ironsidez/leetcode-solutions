@@ -5,7 +5,7 @@ from typing import List
 
 # Add the current directory to the path to import solution
 sys.path.insert(0, os.path.dirname(__file__))
-from solution import Solution
+from .solution import Solution
 
 class TestGroupAnagrams(unittest.TestCase):
     def setUp(self):
@@ -14,13 +14,16 @@ class TestGroupAnagrams(unittest.TestCase):
     def test_example_1(self):
         strs = ["eat","tea","tan","ate","nat","bat"]
         result = self.solution.groupAnagrams(strs)
-        # Sort each group and the groups themselves for comparison
-        result_sorted = [sorted(group) for group in result]
-        result_sorted.sort()
-        expected = [["bat"], ["eat","tea","ate"], ["tan","nat"]]
-        expected_sorted = [sorted(group) for group in expected]
-        expected_sorted.sort()
-        self.assertEqual(result_sorted, expected_sorted)
+        
+        # Convert result to sets of frozensets for comparison (order doesn't matter)
+        result_sets = {frozenset(group) for group in result}
+        expected_sets = {
+            frozenset(["eat", "tea", "ate"]),
+            frozenset(["tan", "nat"]),
+            frozenset(["bat"])
+        }
+        
+        self.assertEqual(result_sets, expected_sets)
     
     def test_example_2(self):
         strs = [""]
